@@ -12,6 +12,8 @@ AutoSolutions - Sistema de gestión de taller automotriz desarrollado con Spring
 
 ### Variables de Entorno
 
+**⚠️ IMPORTANTE: Todas las variables de entorno son OBLIGATORIAS**
+
 El proyecto utiliza variables de entorno para las credenciales sensibles. Crea un archivo `.env` basado en `.env.example`:
 
 ```bash
@@ -26,7 +28,10 @@ Luego configura las siguientes variables en tu archivo `.env`:
 - `ADMIN_USERNAME`: Usuario administrador de la aplicación
 - `ADMIN_PASSWORD`: Contraseña del administrador
 
-**⚠️ IMPORTANTE**: Nunca subas el archivo `.env` al repositorio. Este está incluido en `.gitignore`.
+**⚠️ IMPORTANTE**: 
+- Todas estas variables son OBLIGATORIAS. La aplicación no arrancará sin ellas.
+- Nunca subas el archivo `.env` al repositorio. Este está incluido en `.gitignore`.
+- Usa contraseñas seguras en producción.
 
 ### Migración de Base de Datos
 
