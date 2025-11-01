@@ -44,6 +44,7 @@ public class Empleado {
   @Column(name = "fecha_ingreso", nullable = true)
   private LocalDate fechaIngreso;
 
+  @Builder.Default
   @Column(nullable = false)
   private boolean activo = true;
 
