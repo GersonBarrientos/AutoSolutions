@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_layout :: head(~{::title})}">
+  <title th:text="${'Orden #' + orden.id}">Detalle Orden</title>
+</head>
+
+<body th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
+<section th:object="${orden}">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Orden #<span th:text="*{id}">1</span></h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" th:href="@{/ordenes}">
+        <i class="bi bi-arrow-left me-1"></i> Volver
+      </a>
+      <a class="btn btn-primary" th:href="@{'/ordenes/' + *{id} + '/editar'}">
+        <i class="bi bi-pencil me-1"></i> Editar
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card-modern">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-3">Información general</h6>
+          <div class="mb-2"><strong>Vehículo:</strong>
+            <span th:text="*{vehiculo != null ? vehiculo.placa : '—'}">P000-000</span>
+            <small class="text-muted ms-1" th:if="*{vehiculo != null}"
+                  th:text="*{vehiculo.marca + ' ' + vehiculo.modelo}">Marca/Modelo</small>
+          </div>
+          <div class="mb-2"><strong>Estado:</strong> <span th:text="*{estado != null ? estado.nombre : '—'}">ABIERTA</span></div>
+          <div class="mb-2">
+            <strong>Ingreso:</strong>
+            <span th:if="*{fechaIngreso != null}" th:text="${#temporals.format(orden.fechaIngreso, 'dd/MM/yyyy HH:mm')}">27/10/2025 10:30</span>
+            <span th:if="*{fechaIngreso == null}">—</span>
+          </div>
+          <div class="mb-2"><strong>KM:</strong> <span th:text="*{kmIngreso}">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card-modern">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-3">Notas</h6>
+          <div class="mb-2"><strong>Diagnóstico:</strong> <div th:text="*{diagnostico}">—</div></div>
+          <div><strong>Observaciones:</strong> <div th:text="*{observaciones}">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Servicios -->
+    <div class="col-12">
+      <div class="card-modern">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-sm m-0">
+              <thead><tr><th>Descripción</th><th class="text-end">Cant.</th><th class="text-end">Precio</th><th class="text-end">Total</th></tr></thead>
+              <tbody>
+              <tr th:each="det : *{detalles}" th:if="${det.tipo != null and det.tipo.name() == 'SERVICIO'}">
+                <td th:text="${det.descripcion}">Servicio</td>
+                <td class="text-end" th:text="${#numbers.formatDecimal(det.cantidad,1,2)}">1.00</td>
+                <td class="text-end" th:text="${'$' + #numbers.formatDecimal(det.precioUnit,1,2)}">$0.00</td>
+                <td class="text-end" th:text="${'$' + #numbers.formatDecimal(det.totalLinea,1,2)}">$0.00</td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(#lists.select(orden.detalles, d -> d.tipo != null && d.tipo.name() == 'SERVICIO'))}">
+                <td colspan="4" class="text-center text-muted">Sin servicios</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repuestos -->
+    <div class="col-12">
+      <div class="card-modern">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-sm m-0">
+              <thead><tr><th>Repuesto</th><th class="text-end">Cant.</th><th class="text-end">Precio</th><th class="text-end">Total</th></tr></thead>
+              <tbody>
+              <tr th:each="det : *{detalles}" th:if="${det.tipo != null and det.tipo.name() == 'REPUESTO'}">
+                <td th:text="${det.descripcion}">Repuesto</td>
+                <td class="text-end" th:text="${#numbers.formatDecimal(det.cantidad,1,2)}">1.00</td>
+                <td class="text-end" th:text="${'$' + #numbers.formatDecimal(det.precioUnit,1,2)}">$0.00</td>
+                <td class="text-end" th:text="${'$' + #numbers.formatDecimal(det.totalLinea,1,2)}">$0.00</td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(#lists.select(orden.detalles, d -> d.tipo != null && d.tipo.name() == 'REPUESTO'))}">
+                <td colspan="4" class="text-center text-muted">Sin repuestos</td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <th colspan="3" class="text-end">Total:</th>
+                <th class="text-end" th:text="${'$' + #numbers.formatDecimal(orden.total,1,2)}">$0.00</th>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+</body>
+</html>

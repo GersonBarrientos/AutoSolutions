@@ -1,0 +1,52 @@
+@'
+# =======================
+# Maven / Java / Spring
+# =======================
+target/
+# Mantener el Maven Wrapper (se debe versionar)
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# =======================
+# IDEs / Herramientas
+# =======================
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# =======================
+# SO / Misceláneo
+# =======================
+.DS_Store
+Thumbs.db
+
+# =======================
+# Logs / Dumps / PIDs
+# =======================
+logs/
+*.log
+hs_err_pid*
+*.dump
+*.pid
+
+# =======================
+# Respaldos locales
+# =======================
+backup_target/
+backup_target__OFF/
+
+# =======================
+# Config locales (no secretos en repo)
+# Mantén *-sample o *.example versionados
+# =======================
+src/main/resources/application-*-local.properties
+src/main/resources/application-dev-*.properties
+# Si tienes credenciales reales en prod, NO las subas:
+# src/main/resources/application-prod.properties
+# En su lugar, usa application-prod.properties.example (sí se versiona)
+'@ | Set-Content -Encoding UTF8 .gitignore

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_layout :: head(~{::title})}">
+  <title th:text="${orden.id == null ? 'Nueva orden' : ('Editar orden #' + orden.id)}">Orden</title>
+</head>
+
+<body th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
+<section>
+
+  <h1 class="h4 mb-3" th:text="${orden.id == null ? 'Nueva orden de trabajo' : 'Editar orden de trabajo'}">Orden</h1>
+
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span th:text="${error}">Ha ocurrido un error</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <form th:object="${orden}"
+        th:action="${orden.id} == null ? @{/ordenes} : @{'/ordenes/' + ${orden.id}}"
+        method="post" class="needs-validation">
+
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Vehículo</label>
+        <select class="form-select" th:field="*{vehiculoId}" required>
+          <option value="" disabled selected>Seleccione…</option>
+          <option th:each="v: ${vehiculos}" th:value="${v.id}"
+                  th:text="${v.placa + ' - ' + (v.marca != null ? v.marca : '') + ' ' + (v.modelo != null ? v.modelo : '')}">
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select class="form-select" th:field="*{estadoId}" required>
+          <option value="" disabled selected>Seleccione…</option>
+          <option th:each="e: ${estados}" th:value="${e.id}" th:text="${e.nombre}"></option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Fecha ingreso</label>
+        <input class="form-control" type="datetime-local" th:field="*{fechaIngreso}">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Km ingreso</label>
+        <input class="form-control" type="number" th:field="*{kmIngreso}" min="0">
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Diagnóstico</label>
+        <textarea class="form-control" th:field="*{diagnostico}" rows="2"></textarea>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Observaciones</label>
+        <textarea class="form-control" th:field="*{observaciones}" rows="2"></textarea>
+      </div>
+
+      <!-- Repuestos -->
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="h6 mb-2">Repuestos</h2>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addRepuesto()">+ Agregar repuesto</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+            <tr>
+              <th style="width:45%">Repuesto</th>
+              <th style="width:15%">Cantidad</th>
+              <th style="width:15%">Precio</th>
+              <th style="width:15%">Total</th>
+              <th style="width:10%"></th>
+            </tr>
+            </thead>
+            <tbody id="tbodyRepuestos">
+            <tr th:each="r, i : *{repuestos}">
+              <td>
+                <select class="form-select" th:field="*{repuestos[__${i.index}__].repuestoId}">
+                  <option value="">Seleccione…</option>
+                  <option th:each="rp: ${repuestos}" th:value="${rp.id}" th:text="${rp.nombre}"></option>
+                </select>
+              </td>
+              <td><input class="form-control" type="number" min="0.01" step="0.01" th:field="*{repuestos[__${i.index}__].cantidad}"></td>
+              <td><input class="form-control" type="number" step="0.01" placeholder="(del server)" disabled></td>
+              <td><input class="form-control" type="number" step="0.01" placeholder="(auto)" disabled></td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">×</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Servicios -->
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="h6 mb-2">Servicios</h2>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addServicio()">+ Agregar servicio</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+            <tr>
+              <th style="width:45%">Descripción</th>
+              <th style="width:20%">Cantidad</th>
+              <th style="width:20%">Precio</th>
+              <th style="width:15%">Total</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody id="tbodyServicios">
+            <tr th:each="s, i : *{servicios}">
+              <td><input class="form-control" type="text" th:field="*{servicios[__${i.index}__].descripcion}"></td>
+              <td><input class="form-control" type="number" min="0.01" step="0.01" th:field="*{servicios[__${i.index}__].cantidad}"></td>
+              <td><input class="form-control" type="number" min="0.00" step="0.01" th:field="*{servicios[__${i.index}__].precioUnit}"></td>
+              <td><input class="form-control" type="number" step="0.01" placeholder="(auto)" disabled></td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">×</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save me-1"></i> Guardar
+        </button>
+        <a class="btn btn-outline-secondary" th:href="@{/ordenes}">
+          <i class="bi bi-x-circle me-1"></i> Cancelar
+        </a>
+      </div>
+    </div>
+  </form>
+
+</section>
+
+<script>
+  function removeRow(btn){ btn.closest('tr').remove(); }
+
+  function addRepuesto(){
+    const tb = document.getElementById('tbodyRepuestos');
+    const idx = tb.querySelectorAll('tr').length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <select class="form-select" name="repuestos[\${idx}].repuestoId">
+          <option value="">Seleccione…</option>
+        </select>
+      </td>
+      <td><input class="form-control" type="number" name="repuestos[\${idx}].cantidad" min="0.01" step="0.01"></td>
+      <td><input class="form-control" type="number" step="0.01" placeholder="(del server)" disabled></td>
+      <td><input class="form-control" type="number" step="0.01" placeholder="(auto)" disabled></td>
+      <td class="text-end"><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">×</button></td>`;
+    tr.innerHTML = tr.innerHTML.replaceAll('\\${idx}', idx);
+    tb.appendChild(tr);
+  }
+
+  function addServicio(){
+    const tb = document.getElementById('tbodyServicios');
+    const idx = tb.querySelectorAll('tr').length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="form-control" type="text" name="servicios[\${idx}].descripcion"></td>
+      <td><input class="form-control" type="number" name="servicios[\${idx}].cantidad" min="0.01" step="0.01"></td>
+      <td><input class="form-control" type="number" name="servicios[\${idx}].precioUnit" min="0.00" step="0.01"></td>
+      <td><input class="form-control" type="number" step="0.01" placeholder="(auto)" disabled></td>
+      <td class="text-end"><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">×</button></td>`;
+    tr.innerHTML = tr.innerHTML.replaceAll('\\${idx}', idx);
+    tb.appendChild(tr);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_layout :: head(~{::title})}">
+  <title>Detalle de Vehículo · AutoSolutions</title>
+</head>
+
+<body th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
+<section>
+
+  <!-- Header con placa destacada -->
+  <div class="detail-header">
+    <div class="d-flex justify-content-between align-items-start">
+      <div class="d-flex align-items-start gap-3">
+        <!-- Ícono de vehículo -->
+        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" 
+             style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--info), #38b2d4); color: white; font-size: 1.75rem; box-shadow: 0 4px 12px rgba(23, 162, 184, 0.2);">
+          <i class="bi bi-car-front-fill"></i>
+        </div>
+        <div>
+          <h1 class="detail-title mb-2">
+            Vehículo: 
+            <span class="badge badge-minimal ms-2" 
+                  style="background: rgba(13, 110, 253, 0.1); color: #0D6EFD; font-size: 1.25rem; padding: 0.5rem 1rem; font-weight: 700;" 
+                  th:text="${vehiculo.placa}">PLACA</span>
+          </h1>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge badge-minimal badge-active">
+              <i class="bi bi-calendar-check me-1"></i>
+              Registrado: <span th:text="${#temporals.format(vehiculo.createdAt, 'dd/MM/yyyy')}">01/01/2025</span>
+            </span>
+            <span class="badge badge-minimal" style="background: rgba(255, 193, 7, 0.1); color: var(--warning);" th:if="${vehiculo.anio != null}">
+              <i class="bi bi-calendar-event me-1"></i>
+              Año: <span th:text="${vehiculo.anio}">2020</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <a th:href="@{/vehiculos/{id}/editar(id=${vehiculo.id})}" class="btn btn-edit">
+          <i class="bi bi-pencil me-1"></i> Editar
+        </a>
+        <a th:href="@{/vehiculos}" class="btn btn-back">
+          <i class="bi bi-arrow-left me-1"></i> Volver
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid de información -->
+  <div class="row g-3">
+    
+    <!-- Columna izquierda: Datos del vehículo -->
+    <div class="col-lg-8">
+      
+      <!-- Card: Identificación -->
+      <div class="info-card">
+        <div class="info-card-title">
+          <i class="bi bi-card-text"></i>
+          Identificación del Vehículo
+        </div>
+
+        <div class="data-grid data-grid-2">
+          
+          <div class="data-item">
+            <span class="data-label">ID de Registro</span>
+            <div class="data-value" style="font-size: 1rem; color: var(--gris-texto);" th:text="${vehiculo.id}">1</div>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Placa</span>
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-credit-card-2-front-fill" style="color: #0D6EFD; font-size: 1.25rem;"></i>
+              <span class="badge badge-minimal" 
+                    style="background: rgba(13, 110, 253, 0.1); color: #0D6EFD; font-size: 1.125rem; padding: 0.5rem 1rem; font-weight: 700;" 
+                    th:text="${vehiculo.placa}">P123-456</span>
+            </div>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Año</span>
+            <div class="data-value" th:if="${vehiculo.anio != null}" th:text="${vehiculo.anio}">2020</div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.anio != null}">No especificado</span>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Color</span>
+            <div class="d-flex align-items-center gap-2" th:if="${vehiculo.color != null}">
+              <div class="rounded-circle" style="width: 24px; height: 24px; background: var(--gris-grafito); border: 3px solid var(--border-subtle); box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+              <span class="data-value" style="font-size: 1rem;" th:text="${vehiculo.color}">Blanco</span>
+            </div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.color != null}">No especificado</span>
+          </div>
+
+        </div>
+
+        <div class="data-grid mt-3">
+          <div class="data-item">
+            <span class="data-label">VIN (Número de Serie)</span>
+            <div class="d-flex align-items-center gap-2" th:if="${vehiculo.vin != null}">
+              <i class="bi bi-upc-scan" style="color: var(--naranja-intenso); font-size: 1.25rem;"></i>
+              <span class="badge badge-minimal" 
+                    style="background: rgba(247, 103, 7, 0.1); color: var(--naranja-intenso); font-family: monospace; padding: 0.5rem 0.875rem;" 
+                    th:text="${vehiculo.vin}">1HGBH41JXMN109186</span>
+            </div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.vin != null}">No registrado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Marca y Modelo -->
+      <div class="info-card">
+        <div class="info-card-title">
+          <i class="bi bi-tag"></i>
+          Marca y Modelo
+        </div>
+
+        <div class="data-grid data-grid-2">
+          
+          <div class="data-item">
+            <span class="data-label">Marca</span>
+            <div class="d-flex align-items-center gap-2" th:if="${vehiculo.marca != null}">
+              <i class="bi bi-award-fill" style="color: var(--warning); font-size: 1.5rem;"></i>
+              <span class="data-value" th:text="${vehiculo.marca.nombre}">Toyota</span>
+            </div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.marca != null}">No especificada</span>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Modelo</span>
+            <div class="data-value" th:if="${vehiculo.modelo != null}" th:text="${vehiculo.modelo.nombre}">Corolla</div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.modelo != null}">No especificado</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Card: Propietario -->
+      <div class="info-card" th:if="${vehiculo.cliente != null}">
+        <div class="info-card-title">
+          <i class="bi bi-person-badge"></i>
+          Propietario
+        </div>
+
+        <div class="d-flex align-items-start gap-3 mb-3">
+          <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" 
+               style="width: 48px; height: 48px; background: rgba(247, 103, 7, 0.1); color: var(--naranja-intenso); font-size: 1.125rem; font-weight: 700;">
+            <span th:text="${#strings.substring(vehiculo.cliente.nombres, 0, 1) + #strings.substring(vehiculo.cliente.apellidos, 0, 1)}">JC</span>
+          </div>
+          <div class="flex-grow-1">
+            <a th:href="@{/clientes/{id}(id=${vehiculo.cliente.id})}" 
+               class="service-link" 
+               style="font-size: 1.125rem; font-weight: 600;"
+               th:text="${vehiculo.cliente.nombreCompleto}">Juan Carlos Pérez</a>
+            <div class="d-flex flex-wrap gap-3 mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-telephone-fill" style="color: var(--success);"></i>
+                <a th:href="'tel:' + ${vehiculo.cliente.telefono}" 
+                   class="service-link" 
+                   style="font-size: 0.9375rem;"
+                   th:text="${vehiculo.cliente.telefono}">0000-0000</a>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-card-text" style="color: var(--gris-texto);"></i>
+                <span class="badge badge-minimal badge-inactive" th:text="${vehiculo.cliente.dui}">00000000-0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a th:href="@{/clientes/{id}(id=${vehiculo.cliente.id})}" class="btn btn-secondary-minimal btn-sm w-100">
+          <i class="bi bi-person-vcard me-1"></i> Ver perfil completo del cliente
+        </a>
+      </div>
+
+      <!-- Card: Auditoría -->
+      <div class="info-card">
+        <div class="info-card-title">
+          <i class="bi bi-clock-history"></i>
+          Información de Auditoría
+        </div>
+
+        <div class="data-grid data-grid-2">
+          
+          <div class="data-item">
+            <span class="data-label">Fecha de Creación</span>
+            <div th:if="${vehiculo.createdAt}" 
+                 style="color: var(--gris-grafito); font-size: 0.9375rem;"
+                 th:text="${#temporals.format(vehiculo.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:00</div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.createdAt}">N/A</span>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Última Modificación</span>
+            <div th:if="${vehiculo.updatedAt}" 
+                 style="color: var(--gris-grafito); font-size: 0.9375rem;"
+                 th:text="${#temporals.format(vehiculo.updatedAt, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:00</div>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.updatedAt}">N/A</span>
+          </div>
+
+          <div class="data-item">
+            <span class="data-label">Versión de Registro</span>
+            <span class="badge badge-minimal badge-inactive" th:if="${vehiculo.version != null}" th:text="'v' + ${vehiculo.version}">v1</span>
+            <span class="text-muted" style="font-size: 0.9375rem;" th:unless="${vehiculo.version != null}">N/A</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Columna derecha: Acciones y estadísticas -->
+    <div class="col-lg-4">
+      
+      <!-- Card: Acciones rápidas -->
+      <div class="info-card">
+        <div class="info-card-title">
+          <i class="bi bi-lightning-charge-fill" style="color: var(--naranja-intenso);"></i>
+          Acciones Rápidas
+        </div>
+
+        <div class="d-grid gap-2">
+          <a th:href="@{/vehiculos/{id}/editar(id=${vehiculo.id})}" class="btn btn-primary-minimal btn-sm">
+            <i class="bi bi-pencil me-2"></i> Editar Vehículo
+          </a>
+          <a th:href="@{/ordenes/nueva(vehiculoId=${vehiculo.id})}" class="btn btn-secondary-minimal btn-sm">
+            <i class="bi bi-file-earmark-plus me-2"></i> Nueva Orden
+          </a>
+          <a th:href="@{/vehiculos}" class="btn btn-secondary-minimal btn-sm">
+            <i class="bi bi-list-ul me-2"></i> Ver Todos los Vehículos
+          </a>
+        </div>
+      </div>
+
+      <!-- Card: Estadísticas -->
+      <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(40, 167, 69, 0.1); color: var(--success);">
+          <i class="bi bi-clipboard-check-fill"></i>
+        </div>
+        <div class="stats-title">Historial de Servicio</div>
+        <div class="stats-value">
+          Este vehículo tiene <b style="color: var(--success);">—</b> órdenes de trabajo registradas
+        </div>
+      </div>
+
+      <div class="stats-card">
+        <div class="stats-icon" style="background: rgba(247, 103, 7, 0.1); color: var(--naranja-intenso);">
+          <i class="bi bi-tools"></i>
+        </div>
+        <div class="stats-title">Último Servicio</div>
+        <div class="stats-value">
+          Última visita al taller: <b class="placeholder-text">Pendiente</b>
+        </div>
+      </div>
+
+      <!-- Card: Resumen visual -->
+      <div class="info-card" style="background: linear-gradient(135deg, var(--gris-grafito), #2c3237);">
+        <div class="text-center text-white py-2">
+          <i class="bi bi-car-front-fill mb-2" style="font-size: 2.5rem; opacity: 0.9;"></i>
+          <p class="mb-1 fw-semibold" style="font-size: 1rem;">
+            <span th:text="${vehiculo.marca != null ? vehiculo.marca.nombre : 'Vehículo'}">Toyota</span>
+            <span th:if="${vehiculo.modelo != null}" th:text="${vehiculo.modelo.nombre}">Corolla</span>
+          </p>
+          <p class="mb-0" style="font-size: 0.875rem; opacity: 0.8;">
+            <span th:if="${vehiculo.anio != null}" th:text="${vehiculo.anio}">2020</span>
+            <span th:if="${vehiculo.color != null}"> · <span th:text="${vehiculo.color}">Blanco</span></span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Botón de regreso -->
+  <div class="mt-4">
+    <a class="btn btn-secondary-minimal" th:href="@{/vehiculos}">
+      <i class="bi bi-arrow-left me-1"></i> Volver al listado de vehículos
+    </a>
+  </div>
+
+</section>
+</body>
+</html>

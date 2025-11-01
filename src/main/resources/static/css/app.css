@@ -1,0 +1,1397 @@
+/* ==========================================================================
+   🎨 AUTOSOLUTIONS - PALETA INDUSTRIAL MODERNO
+   ========================================================================== */
+
+/* ============================================================
+   📐 VARIABLES GLOBALES - INDUSTRIAL MODERNO
+   ============================================================ */
+:root {
+  /* Paleta Industrial Moderno */
+  --gris-grafito: #343A40;
+  --naranja-intenso: #F76707;
+  --fondo-claro: #F8F9FA;
+  --blanco: #FFFFFF;
+  --gris-texto: #6C757D;
+  --border-subtle: #E9ECEF;
+  
+  /* Estados semánticos */
+  --success: #28A745;
+  --success-light: rgba(40, 167, 69, 0.1);
+  --danger: #DC3545;
+  --danger-light: rgba(220, 53, 69, 0.1);
+  --warning: #FFC107;
+  --warning-light: rgba(255, 193, 7, 0.1);
+  --info: #17A2B8;
+  --info-light: rgba(23, 162, 184, 0.1);
+  
+  /* Espaciado y bordes */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   🎯 BASE Y TIPOGRAFÍA
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--fondo-claro);
+  color: var(--gris-grafito);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   🎯 NAVBAR MODERNO (ADAPTADO A INDUSTRIAL)
+   ============================================================ */
+.navbar-modern {
+  background: var(--gris-grafito);
+  box-shadow: var(--shadow-md);
+  padding: 0.75rem 0;
+}
+
+.navbar-modern .navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.navbar-modern .navbar-brand:hover {
+  color: white;
+  opacity: 0.9;
+}
+
+.navbar-modern .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.navbar-modern .nav-link:hover,
+.navbar-modern .nav-link.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Línea naranja para item activo */
+.navbar-modern .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--naranja-intenso);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Toggler personalizado */
+.navbar-modern .navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-modern .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Botón de logout en navbar */
+.navbar-modern .btn-secondary-minimal {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.875rem;
+  padding: 0.375rem 0.875rem;
+}
+
+.navbar-modern .btn-secondary-minimal:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* ============================================================
+   📦 CONTENEDOR PRINCIPAL
+   ============================================================ */
+.main-container {
+  min-height: calc(100vh - 180px);
+  padding: 2.5rem 0;
+}
+
+.main-content {
+  min-height: calc(100vh - 200px);
+}
+
+/* ============================================================
+   🏠 DASHBOARD ESPECÍFICO
+   ============================================================ */
+.dashboard-header {
+  background: linear-gradient(135deg, var(--gris-grafito) 0%, #2c3136 100%);
+  border-radius: var(--radius-xl);
+  padding: 2rem 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-subtitle {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* ============================================================
+   📊 STATS CARDS (DASHBOARD)
+   ============================================================ */
+.stats-card {
+  background: var(--blanco);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  height: 100%;
+}
+
+.stats-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stats-card-yellow {
+  border-left-color: var(--warning);
+}
+
+.stats-card-orange {
+  border-left-color: var(--naranja-intenso);
+}
+
+.stats-card-blue {
+  border-left-color: var(--info);
+}
+
+.stats-card-green {
+  border-left-color: var(--success);
+}
+
+.stats-icon-wrapper {
+  flex-shrink: 0;
+}
+
+.stats-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stats-icon-yellow {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.stats-icon-orange {
+  background: rgba(247, 103, 7, 0.1);
+  color: var(--naranja-intenso);
+}
+
+.stats-icon-blue {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+.stats-icon-green {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.stats-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gris-grafito);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stats-label {
+  font-size: 0.875rem;
+  color: var(--gris-texto);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   ⚡ QUICK ACTIONS (DASHBOARD)
+   ============================================================ */
+.quick-action-card {
+  background: var(--blanco);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.quick-action-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: var(--border-subtle);
+}
+
+.quick-action-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.bg-gradient-orange {
+  background: linear-gradient(135deg, var(--naranja-intenso) 0%, #e55f06 100%);
+}
+
+.bg-gradient-gray {
+  background: linear-gradient(135deg, var(--gris-grafito) 0%, #2c3136 100%);
+}
+
+.quick-action-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  margin-bottom: 0.375rem;
+}
+
+.quick-action-text {
+  font-size: 0.8125rem;
+  color: var(--gris-texto);
+  margin: 0;
+}
+
+/* ============================================================
+   📋 ACTIVITY LIST (DASHBOARD)
+   ============================================================ */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.125rem;
+}
+
+.activity-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--gris-grafito);
+  margin-bottom: 0.25rem;
+}
+
+.activity-time {
+  font-size: 0.8125rem;
+  color: var(--gris-texto);
+}
+
+/* ============================================================
+   📄 HEADERS DE PÁGINA
+   ============================================================ */
+.page-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--gris-texto);
+  font-weight: 400;
+  margin: 0;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.form-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.detail-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detail-title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  letter-spacing: -0.02em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detail-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(247, 103, 7, 0.1);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--naranja-intenso);
+}
+
+/* ============================================================
+   🎴 TARJETAS MINIMALISTAS
+   ============================================================ */
+.card-minimal {
+  background: var(--blanco);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.card-minimal:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-title-minimal {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  margin: 0;
+}
+
+.card-subtitle-minimal {
+  font-size: 0.875rem;
+  color: var(--gris-texto);
+  margin: 0;
+}
+
+/* Cards de información (detalle) */
+.info-card {
+  background: var(--blanco);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-texto);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Card de búsqueda */
+.search-container {
+  padding: 1.5rem;
+}
+
+/* Tarjeta de formulario */
+.form-card {
+  background: var(--blanco);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   🔘 BOTONES MINIMALISTAS
+   ============================================================ */
+.btn {
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+/* Botón principal - Naranja */
+.btn-primary-minimal,
+.btn-primary-form,
+.btn-edit {
+  background: var(--naranja-intenso);
+  border: none;
+  color: var(--blanco);
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-minimal:hover,
+.btn-primary-form:hover,
+.btn-edit:hover {
+  background: #E55F06;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(247, 103, 7, 0.25);
+  color: var(--blanco);
+}
+
+/* Botón secundario */
+.btn-secondary-minimal,
+.btn-secondary-form,
+.btn-back {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--gris-grafito);
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-minimal:hover,
+.btn-secondary-form:hover,
+.btn-back:hover {
+  background: var(--fondo-claro);
+  border-color: var(--gris-grafito);
+  color: var(--gris-grafito);
+}
+
+/* Botones de acción en tablas */
+.action-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--gris-grafito);
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.action-btn:hover {
+  background: var(--fondo-claro);
+  border-color: var(--gris-grafito);
+  color: var(--gris-grafito);
+}
+
+.action-btn-danger:hover {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Ancho mínimo para botones de formulario */
+.btn-primary-form,
+.btn-secondary-form {
+  min-width: 140px;
+}
+
+/* ============================================================
+   📝 FORMULARIOS MINIMALISTAS
+   ============================================================ */
+.form-group-minimal {
+  margin-bottom: 1.75rem;
+}
+
+.form-label-minimal {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gris-grafito);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-label-minimal .required {
+  color: var(--naranja-intenso);
+  margin-left: 0.25rem;
+}
+
+.form-control-minimal,
+.search-input {
+  border: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  background: var(--blanco);
+}
+
+.form-control-minimal:focus,
+.search-input:focus {
+  border-color: var(--gris-grafito);
+  box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.06);
+  outline: none;
+}
+
+.form-control-minimal::placeholder,
+.search-input::placeholder {
+  color: #ADB5BD;
+}
+
+.form-select-minimal {
+  border: 1px solid var(--border-subtle);
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  background: var(--blanco);
+  cursor: pointer;
+}
+
+.form-select-minimal:focus {
+  border-color: var(--gris-grafito);
+  box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.06);
+  outline: none;
+}
+
+/* Mensajes de error */
+.error-message {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.form-control-error {
+  border-color: var(--danger);
+}
+
+.form-control-error:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Helper text */
+.form-helper {
+  font-size: 0.8125rem;
+  color: var(--gris-texto);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Input con símbolo de moneda */
+.currency-input-wrapper {
+  position: relative;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gris-texto);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.currency-input {
+  padding-left: 2rem;
+}
+
+/* Input de número sin spinner */
+input[type="number"].form-control-minimal {
+  -moz-appearance: textfield;
+}
+
+input[type="number"].form-control-minimal::-webkit-inner-spin-button,
+input[type="number"].form-control-minimal::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Acciones de formulario */
+.form-actions {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 1rem;
+}
+
+/* Grid de formularios */
+.form-grid {
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .form-grid-3 {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   📊 TABLAS MINIMALISTAS
+   ============================================================ */
+.table-minimal {
+  font-size: 0.9375rem;
+}
+
+.table-minimal thead {
+  background: transparent;
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.table-minimal thead th {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-texto);
+  padding: 1rem 1.25rem;
+  border: none;
+}
+
+.table-minimal tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color 0.15s ease;
+}
+
+.table-minimal tbody tr:hover {
+  background-color: rgba(52, 58, 64, 0.02);
+}
+
+.table-minimal tbody td {
+  padding: 1.125rem 1.25rem;
+  vertical-align: middle;
+  color: var(--gris-grafito);
+  border: none;
+}
+
+.table-minimal tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* ============================================================
+   🏷️ BADGES MINIMALISTAS
+   ============================================================ */
+.badge-minimal {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+
+.badge-active {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badge-inactive {
+  background: rgba(108, 117, 125, 0.1);
+  color: var(--gris-texto);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+}
+
+.status-badge-active {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.status-badge-inactive {
+  background: rgba(108, 117, 125, 0.1);
+  color: var(--gris-texto);
+}
+
+.status-icon {
+  font-size: 1rem;
+}
+
+/* ============================================================
+   ⚠️ ALERTAS MINIMALISTAS
+   ============================================================ */
+.alert-minimal {
+  border: 1px solid;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-success-minimal {
+  background: rgba(40, 167, 69, 0.05);
+  border-color: rgba(40, 167, 69, 0.2);
+  color: var(--success);
+}
+
+.alert-danger-minimal {
+  background: rgba(220, 53, 69, 0.05);
+  border-color: rgba(220, 53, 69, 0.2);
+  color: var(--danger);
+}
+
+/* ============================================================
+   📢 DATA DISPLAY (DETALLES)
+   ============================================================ */
+.data-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .data-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.data-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-texto);
+}
+
+.data-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+}
+
+.data-value-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+/* ============================================================
+   🔄 ELEMENTOS ESPECÍFICOS
+   ============================================================ */
+/* Precio en tablas */
+.price-display {
+  font-weight: 600;
+  color: var(--success);
+  font-size: 0.9375rem;
+}
+
+/* Links de servicio */
+.service-link {
+  color: var(--gris-grafito);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.service-link:hover {
+  color: var(--naranja-intenso);
+}
+
+/* Contador de resultados */
+.result-count {
+  font-size: 0.875rem;
+  color: var(--gris-texto);
+  padding-top: 0.5rem;
+}
+
+.result-count b {
+  color: var(--gris-grafito);
+  font-weight: 600;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-state-icon {
+  font-size: 3.5rem;
+  color: var(--border-subtle);
+  margin-bottom: 1.5rem;
+}
+
+.empty-state-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-text {
+  color: var(--gris-texto);
+  margin-bottom: 1.5rem;
+}
+
+/* Placeholder text */
+.placeholder-text {
+  color: var(--gris-texto);
+  font-style: italic;
+}
+
+/* ============================================================
+   📱 PAGINACIÓN MINIMALISTA
+   ============================================================ */
+.pagination-minimal .page-item {
+  margin: 0 0.25rem;
+}
+
+.pagination-minimal .page-link {
+  border: 1px solid var(--border-subtle);
+  color: var(--gris-grafito);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.pagination-minimal .page-link:hover {
+  background: var(--fondo-claro);
+  border-color: var(--gris-grafito);
+}
+
+.pagination-minimal .page-item.disabled .page-link {
+  background: transparent;
+  border-color: var(--border-subtle);
+  color: var(--gris-texto);
+}
+
+/* ============================================================
+   🎭 MODAL MINIMALISTA
+   ============================================================ */
+.modal-minimal .modal-content {
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.modal-minimal .modal-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.5rem;
+}
+
+.modal-minimal .modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gris-grafito);
+}
+
+.modal-minimal .modal-body {
+  padding: 1.5rem;
+}
+
+.modal-minimal .modal-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 1.25rem 1.5rem;
+}
+
+/* ============================================================
+   🦶 FOOTER
+   ============================================================ */
+.footer-modern {
+  background: white;
+  border-top: 1px solid var(--border-subtle);
+  padding: 2rem 0;
+  margin-top: 4rem;
+  color: var(--gris-texto);
+  font-size: 0.875rem;
+}
+
+.footer-modern .hover-primary:hover {
+  color: var(--naranja-intenso) !important;
+  text-decoration: none;
+}
+
+.footer-modern strong {
+  color: var(--gris-grafito);
+}
+
+/* ============================================================
+   🔄 LOADING OVERLAY
+   ============================================================ */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-overlay .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3rem;
+}
+
+/* ============================================================
+   🎭 UTILIDADES
+   ============================================================ */
+.text-primary { color: var(--naranja-intenso) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-muted { color: var(--gris-texto) !important; }
+
+.bg-light { background: var(--fondo-claro) !important; }
+.bg-white { background: var(--blanco) !important; }
+
+/* Sombras */
+.shadow-xs { box-shadow: var(--shadow-xs) !important; }
+.shadow-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow { box-shadow: var(--shadow-md) !important; }
+.shadow-lg { box-shadow: var(--shadow-lg) !important; }
+
+/* Espaciado */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+
+/* Bordes redondeados */
+.rounded-minimal { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   🎨 BOOTSTRAP OVERRIDES (Ajustes para coherencia)
+   ============================================================ */
+/* Alerts de Bootstrap adaptados */
+.alert {
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  padding: 1rem 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.alert-success {
+  background: rgba(40, 167, 69, 0.05);
+  border-color: rgba(40, 167, 69, 0.2);
+  color: var(--success);
+}
+
+.alert-danger {
+  background: rgba(220, 53, 69, 0.05);
+  border-color: rgba(220, 53, 69, 0.2);
+  color: var(--danger);
+}
+
+.alert-info {
+  background: rgba(23, 162, 184, 0.05);
+  border-color: rgba(23, 162, 184, 0.2);
+  color: var(--info);
+}
+
+.alert-warning {
+  background: rgba(255, 193, 7, 0.05);
+  border-color: rgba(255, 193, 7, 0.2);
+  color: #856404;
+}
+
+/* Badges de Bootstrap adaptados */
+.badge.bg-success {
+  background: var(--success-light) !important;
+  color: var(--success) !important;
+  font-weight: 500;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+}
+
+.badge.bg-danger {
+  background: var(--danger-light) !important;
+  color: var(--danger) !important;
+  font-weight: 500;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+}
+
+.badge.bg-warning {
+  background: var(--warning-light) !important;
+  color: #856404 !important;
+  font-weight: 500;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+}
+
+.badge.bg-info {
+  background: var(--info-light) !important;
+  color: var(--info) !important;
+  font-weight: 500;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+}
+
+/* Buttons de Bootstrap adaptados */
+.btn-primary {
+  background: var(--naranja-intenso);
+  border-color: var(--naranja-intenso);
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background: #E55F06;
+  border-color: #E55F06;
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--gris-grafito);
+  border-color: var(--gris-grafito);
+  color: white;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  background: #2c3136;
+  border-color: #2c3136;
+  color: white;
+}
+
+.btn-outline-primary {
+  border-color: var(--naranja-intenso);
+  color: var(--naranja-intenso);
+}
+
+.btn-outline-primary:hover {
+  background: var(--naranja-intenso);
+  border-color: var(--naranja-intenso);
+  color: white;
+}
+
+/* Form controls de Bootstrap adaptados */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gris-grafito);
+  box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.06);
+}
+
+/* Card de Bootstrap adaptada */
+.card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--border-subtle);
+  font-weight: 600;
+  color: var(--gris-grafito);
+}
+
+/* ============================================================
+   📱 RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+  .navbar-modern .nav-link {
+    padding: 0.75rem 1rem;
+  }
+  
+  .navbar-modern .nav-link.active::after {
+    display: none;
+  }
+  
+  .dashboard-header {
+    padding: 1.5rem 1.75rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title,
+  .form-title,
+  .detail-title {
+    font-size: 1.5rem;
+  }
+  
+  .card-minimal {
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+  }
+  
+  .table-minimal {
+    font-size: 0.875rem;
+  }
+  
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8125rem;
+  }
+  
+  .stats-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stats-value {
+    font-size: 1.75rem;
+  }
+  
+  .quick-action-card {
+    padding: 1.25rem;
+  }
+  
+  .dashboard-header {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .main-container {
+    padding: 1.5rem 0;
+  }
+  
+  .footer-modern {
+    text-align: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary-form,
+  .btn-secondary-form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-title {
+    font-size: 1.25rem;
+  }
+  
+  .dashboard-subtitle {
+    font-size: 0.8125rem;
+  }
+  
+  .stats-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  
+  .stats-value {
+    font-size: 1.5rem;
+  }
+  
+  .stats-label {
+    font-size: 0.8125rem;
+  }
+  
+  .quick-action-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  
+  .page-header,
+  .form-header,
+  .detail-header {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ============================================================
+   🎯 ACCESIBILIDAD
+   ============================================================ */
+/* Focus visible para navegación por teclado */
+*:focus-visible {
+  outline: 2px solid var(--naranja-intenso);
+  outline-offset: 2px;
+}
+
+/* Skip to main content */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem;
+  background: var(--naranja-intenso);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.skip-to-main:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+/* Reducir movimiento para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   🎨 ANIMACIONES SUTILES
+   ============================================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* ============================================================
+   🖨️ PRINT STYLES
+   ============================================================ */
+@media print {
+  .navbar-modern,
+  .footer-modern,
+  .btn,
+  .action-btn {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+  }
+  
+  .card-minimal,
+  .info-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
+
+/* ============================================================
+   🎯 FIN DEL SISTEMA DE DISEÑO INDUSTRIAL MODERNO
+   ============================================================ */

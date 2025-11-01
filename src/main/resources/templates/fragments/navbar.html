@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><title>Navbar Fragment</title></head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-modern" th:fragment="navbar(appName, profile)">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
+      <img th:src="@{/images/logoblanco.png}" alt="AutoSolutions" width="96" height="48">
+      
+    </a>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
+            aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="topNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/}">
+            <i class="bi bi-house-door me-1"></i>Inicio
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/clientes}">
+            <i class="bi bi-people me-1"></i>Clientes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/vehiculos}">
+            <i class="bi bi-car-front me-1"></i>Vehículos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/servicios}">
+            <i class="bi bi-tools me-1"></i>Servicios
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/ordenes}">
+            <i class="bi bi-clipboard-check me-1"></i>Órdenes
+          </a>
+        </li>
+                <li class="nav-item">
+          <a class="nav-link" th:href="@{/empleados}">
+            <i class="bi bi-clipboard-check me-1"></i>Empleados
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/repuestos}">
+            <i class="bi bi-clipboard-check me-1"></i>Repuestos
+          </a>
+        </li>
+
+      </ul>
+
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-white-50 small">
+          <i class="bi bi-hdd-network me-1"></i>
+          <span th:text="${profile}">dev</span>
+        </span>
+        <a class="btn btn-sm btn-secondary-minimal" th:href="@{/logout}">
+          <i class="bi bi-box-arrow-right me-1"></i>Salir
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{_layout :: head(~{::title})}">
+  <title>Servicios · AutoSolutions</title>
+</head>
+
+<body th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
+<section>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1 fw-bold">
+        <i class="bi bi-tools text-warning me-2"></i>
+        Catálogo de Servicios
+      </h2>
+      <p class="text-muted mb-0">Mano de obra disponible para órdenes de trabajo</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a th:href="@{/servicios/export.csv(q=${q})}" class="btn btn-outline-secondary">
+        <i class="bi bi-download me-1"></i> Exportar CSV
+      </a>
+      <a th:href="@{/servicios/nuevo}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i> Nuevo Servicio
+      </a>
+    </div>
+  </div>
+
+  <!-- Flash -->
+  <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span th:text="${mensajeExito}">Éxito</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span th:text="${mensajeError}">Error</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <!-- Búsqueda -->
+  <div class="card-modern mb-3">
+    <div class="card-body">
+      <form th:action="@{/servicios}" method="get" class="row g-3 align-items-center">
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input class="form-control border-start-0" name="q" th:value="${q}" placeholder="Buscar por nombre...">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" name="size">
+            <option th:value="10" th:selected="${page != null and page.size == 10}">10 por página</option>
+            <option th:value="20" th:selected="${page != null and page.size == 20}">20 por página</option>
+            <option th:value="50" th:selected="${page != null and page.size == 50}">50 por página</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search me-1"></i> Buscar
+          </button>
+          <a th:href="@{/servicios}" class="btn btn-outline-secondary" title="Limpiar">
+            <i class="bi bi-x-circle"></i>
+          </a>
+        </div>
+      </form>
+
+      <div class="mt-2 d-flex align-items-center justify-content-between">
+        <small class="text-muted">
+          Encontrados:
+          <b th:text="${page != null ? page.totalElements : (servicios != null ? #lists.size(servicios) : 0)}">0</b>
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card-modern">
+    <div class="card-header">
+      <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i> Listado de Servicios</h5>
+    </div>
+
+    <div class="card-body p-0">
+      <div th:if="${servicios != null and !#lists.isEmpty(servicios)}" class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+          <tr>
+            <th width="60">#</th>
+            <th>Nombre</th>
+            <th width="160" class="text-end">Precio</th>
+            <th width="120" class="text-center">Estado</th>
+            <th width="220" class="text-center">Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="s, i : ${servicios}">
+            <td class="text-muted" th:text="${(page != null ? page.number*page.size : 0) + i.index + 1}">1</td>
+            <td class="fw-semibold">
+              <a th:href="@{/servicios/{id}(id=${s.id})}" class="text-decoration-none" th:text="${s.nombre}">Servicio</a>
+            </td>
+            <td class="text-end">
+              <span class="fw-semibold text-success">$<span th:text="${#numbers.formatDecimal(s.precioUnit,1,2)}">0.00</span></span>
+            </td>
+            <td class="text-center">
+              <span th:if="${s.activo}" class="badge badge-success">
+                <i class="bi bi-check-circle me-1"></i> Activo
+              </span>
+              <span th:unless="${s.activo}" class="badge bg-secondary">
+                <i class="bi bi-x-circle me-1"></i> Inactivo
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm" role="group">
+                <!-- Toggle activo -->
+                <form th:action="@{/servicios/{id}/toggle-activo(id=${s.id})}" method="post" class="d-inline">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                  <button class="btn btn-outline-secondary" title="Activar/Inactivar">
+                    <i class="bi" th:classappend="${s.activo} ? ' bi-toggle-on' : ' bi-toggle-off'"></i>
+                  </button>
+                </form>
+
+                <!-- Editar -->
+                <a th:href="@{/servicios/{id}/editar(id=${s.id})}" class="btn btn-outline-primary" title="Editar">
+                  <i class="bi bi-pencil"></i>
+                </a>
+
+                <!-- Eliminar (modal) -->
+                <button type="button" class="btn btn-outline-danger"
+                        th:attr="data-id=${s.id}, data-nombre=${s.nombre}"
+                        onclick="abrirEliminar(this.dataset.id, this.dataset.nombre)"
+                        title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div th:if="${servicios == null or #lists.isEmpty(servicios)}" class="text-center py-5">
+        <i class="bi bi-tools text-muted" style="font-size:4rem;opacity:.3;"></i>
+        <h5 class="mt-3 text-muted">No hay servicios registrados</h5>
+        <p class="text-muted mb-3">Comienza agregando servicios al catálogo</p>
+        <a th:href="@{/servicios/nuevo}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i> Crear Primer Servicio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <nav th:if="${page != null and page.totalPages > 1}" class="mt-3">
+    <ul class="pagination pagination-sm">
+      <li class="page-item" th:classappend="${page.first}? 'disabled'">
+        <a class="page-link" th:href="@{/servicios(page=${page.number-1}, size=${page.size}, q=${q})}">«</a>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link" th:text="${page.number+1} + ' / ' + ${page.totalPages}">1 / 1</span>
+      </li>
+      <li class="page-item" th:classappend="${page.last}? 'disabled'">
+        <a class="page-link" th:href="@{/servicios(page=${page.number+1}, size=${page.size}, q=${q})}">»</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="mt-4">
+    <a class="btn btn-outline-secondary" th:href="@{/}">
+      <i class="bi bi-arrow-left me-1"></i> Volver al inicio
+    </a>
+  </div>
+
+  <!-- Modal eliminar (CSRF) — MOVIDO DENTRO DEL <section> -->
+  <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">
+            <i class="bi bi-exclamation-triangle text-danger me-2"></i> Confirmar Eliminación
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">¿Eliminar el servicio <strong id="nombreServicio"></strong>? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form th:action="@{/servicios/{id}/eliminar(id=0)}" method="post" id="formEliminar">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i> Eliminar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script — MOVIDO DENTRO DEL <section> -->
+  <script>
+    function abrirEliminar(id, nombre) {
+      document.getElementById('nombreServicio').textContent = nombre;
+      document.getElementById('formEliminar').action = '/servicios/' + id + '/eliminar';
+      new bootstrap.Modal(document.getElementById('modalEliminar')).show();
+    }
+    // Auto-cerrar alerts
+    setTimeout(() => {
+      document.querySelectorAll('.alert').forEach(a => {
+        if (a.classList.contains('show')) new bootstrap.Alert(a).close();
+      });
+    }, 3500);
+  </script>
+
+</section>
+</body>
+</html>
