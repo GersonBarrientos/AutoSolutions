@@ -49,4 +49,8 @@ src/main/resources/application-dev-*.properties
 # Si tienes credenciales reales en prod, NO las subas:
 # src/main/resources/application-prod.properties
 # En su lugar, usa application-prod.properties.example (sí se versiona)
+
+# Environment variables (use .env.example as template)
+.env
+.env.local
 '@ | Set-Content -Encoding UTF8 .gitignore
