@@ -1,4 +1,3 @@
-@'
 # =======================
 # Maven / Java / Spring
 # =======================
@@ -53,4 +52,3 @@ src/main/resources/application-dev-*.properties
 # Environment variables (use .env.example as template)
 .env
 .env.local
-'@ | Set-Content -Encoding UTF8 .gitignore
