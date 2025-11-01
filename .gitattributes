@@ -1,3 +1,33 @@
 @'
-* text=auto eol=lf
-'@ | Set-Content -Encoding UTF8 .gitattributes
+# Normaliza finales de línea por defecto
+* text=auto
+
+# Fuerza LF en archivos de *nix
+*.sh   text eol=lf
+*.sql  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Fuerza CRLF en scripts de Windows
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Texto común
+*.java text
+*.xml  text
+*.properties text
+
+# Binarios (no tocar EOL)
+*.jar  binary
+*.zip  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+'@ | Set-Content -Encoding ASCII .gitattributes
+
+git add .gitattributes
+git commit -m "chore: fix .gitattributes (remove invalid attribute)"
+git push
