@@ -165,10 +165,9 @@
           </schemas>
           <validateOnMigrate>true</validateOnMigrate>
 
-          <!-- Sugerencia: mejor mover estos a application-*.properties y omitirlos aquí -->
-          <url>jdbc:oracle:thin:@localhost:1521/XEPDB1</url>
-          <user>GERSON</user>
-          <password>__PON_AQUI_TU_CLAVE__</password>
+          <!-- SECURITY: Database credentials should be configured via environment variables or Maven settings
+               Use: mvn flyway:migrate -Dflyway.url=... -Dflyway.user=... -Dflyway.password=...
+               Or configure in ~/.m2/settings.xml -->
         </configuration>
         <dependencies>
           <dependency>

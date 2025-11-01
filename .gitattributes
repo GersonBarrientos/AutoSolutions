@@ -1,3 +1,1 @@
-@'
 * text=auto eol=lf
-'@ | Set-Content -Encoding UTF8 .gitattributes

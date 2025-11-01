@@ -1,4 +1,3 @@
-@'
 # =======================
 # Maven / Java / Spring
 # =======================
@@ -49,4 +48,7 @@ src/main/resources/application-dev-*.properties
 # Si tienes credenciales reales en prod, NO las subas:
 # src/main/resources/application-prod.properties
 # En su lugar, usa application-prod.properties.example (sí se versiona)
-'@ | Set-Content -Encoding UTF8 .gitignore
+
+# Environment variables (use .env.example as template)
+.env
+.env.local
