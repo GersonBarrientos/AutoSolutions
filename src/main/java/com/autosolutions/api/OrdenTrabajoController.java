@@ -3,66 +3,48 @@ package com.autosolutions.api;
 import com.autosolutions.api.dto.OrdenTrabajoDTO;
 import com.autosolutions.domain.OrdenTrabajo;
 import com.autosolutions.service.OrdenTrabajoService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/ordenes")
-@RequiredArgsConstructor
 public class OrdenTrabajoController {
 
     private final OrdenTrabajoService service;
 
-    // GET /api/ordenes
-    @GetMapping
-    public ResponseEntity<List<OrdenTrabajo>> listar() {
-        return ResponseEntity.ok(service.listar());
+    public OrdenTrabajoController(OrdenTrabajoService service) {
+        this.service = service;
     }
 
-    // GET /api/ordenes/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<OrdenTrabajo> obtener(@PathVariable Long id) {
-        Optional<OrdenTrabajo> ordenOpt = service.buscarPorId(id);
-        return ordenOpt
+    public ResponseEntity<OrdenTrabajo> getById(@PathVariable Long id) {
+        return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /api/ordenes/{id}/dto  -> para cargar el form de edición
     @GetMapping("/{id}/dto")
-    public ResponseEntity<OrdenTrabajoDTO> obtenerDTO(@PathVariable Long id) {
-        OrdenTrabajoDTO dto = service.obtenerDTO(id);
-        if (dto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<OrdenTrabajoDTO> getDto(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerDTO(id));
     }
 
-    // POST /api/ordenes
     @PostMapping
-    public ResponseEntity<Void> crear(@RequestBody OrdenTrabajoDTO dto) {
-        Long id = service.crearOrden(dto);
-        return ResponseEntity.created(URI.create("/api/ordenes/" + id)).build();
+    public ResponseEntity<OrdenTrabajo> create(@Valid @RequestBody OrdenTrabajoDTO dto) {
+        OrdenTrabajo saved = service.crearOrden(dto);
+        return ResponseEntity.created(URI.create("/api/ordenes/" + saved.getId())).body(saved);
     }
 
-    // PUT /api/ordenes/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizar(@PathVariable Long id,
-                                           @RequestBody OrdenTrabajoDTO dto) {
-        service.actualizarOrden(id, dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<OrdenTrabajo> update(@PathVariable Long id,
+                                               @Valid @RequestBody OrdenTrabajoDTO dto) {
+        return ResponseEntity.ok(service.actualizarOrden(id, dto));
     }
 
-    // DELETE /api/ordenes/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.eliminarOrden(id);
         return ResponseEntity.noContent().build();
     }

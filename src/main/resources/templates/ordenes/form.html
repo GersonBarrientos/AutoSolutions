@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{_layout :: head(~{::title})}">
-  <title th:text="${orden.id == null ? 'Nueva orden' : ('Editar orden #' + orden.id)}">Orden</title>
+  <title th:text="${ordenId == null} ? 'Nueva orden' : 'Editar orden #'+ordenId">Orden</title>
 </head>
 
 <body th:replace="~{_layout :: layout(~{::title}, ~{::section})}">
 <section>
 
-  <h1 class="h4 mb-3" th:text="${orden.id == null ? 'Nueva orden de trabajo' : 'Editar orden de trabajo'}">Orden</h1>
+  <h1 class="h4 mb-3" th:text="${ordenId == null} ? 'Nueva orden de trabajo' : 'Editar orden de trabajo'">Orden</h1>
 
   <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -15,18 +15,21 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 
+  <!-- NOTA: 'orden' es un OrdenTrabajoDTO (sin id). -->
   <form th:object="${orden}"
-        th:action="${orden.id} == null ? @{/ordenes} : @{'/ordenes/' + ${orden.id}}"
+        th:action="${ordenId == null} ? @{/ordenes} : @{/ordenes/{id}(id=${ordenId})}"
         method="post" id="ordenForm" class="needs-validation">
 
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
     <div class="row g-3">
+
       <div class="col-md-6">
         <label class="form-label">Vehículo</label>
         <select class="form-select" th:field="*{vehiculoId}" required>
-          <option value="" disabled selected>Seleccione…</option>
-          <option th:each="v: ${vehiculos}" th:value="${v.id}"
+          <option value="" disabled th:selected="${vehiculoId == null}">Seleccione…</option>
+          <option th:each="v: ${vehiculos}"
+                  th:value="${v.id}"
                   th:text="${(v.placa != null ? v.placa : '') + ' · ' + (v.marca != null ? v.marca.nombre : '') + ' ' + (v.modelo != null ? v.modelo.nombre : '')}">
           </option>
         </select>
@@ -35,7 +38,7 @@
       <div class="col-md-3">
         <label class="form-label">Estado</label>
         <select class="form-select" th:field="*{estadoId}" required>
-          <option value="" disabled selected>Seleccione…</option>
+          <option value="" disabled th:selected="${estadoId == null}">Seleccione…</option>
           <option th:each="e: ${estados}" th:value="${e.id}" th:text="${e.nombre}"></option>
         </select>
       </div>
@@ -48,6 +51,11 @@
       <div class="col-md-3">
         <label class="form-label">Salida estimada</label>
         <input class="form-control" type="datetime-local" th:field="*{fechaSalidaEstimada}">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Km ingreso</label>
+        <input class="form-control" type="number" min="0" step="1" th:field="*{kmIngreso}">
       </div>
 
       <div class="col-12">
@@ -80,13 +88,14 @@
             </tr>
             </thead>
             <tbody id="tbodyRepuestos">
-            <!-- Filas existentes -->
+            <!-- Filas existentes (DTO.repuestos) -->
             <tr th:each="r, it : *{repuestos}">
               <td>
                 <select class="form-select"
                         th:name="${'repuestos[' + it.index + '].repuestoId'}" required>
-                  <option value="">Seleccione…</option>
-                  <option th:each="rp: ${repuestos}" th:value="${rp.id}"
+                  <option value="" th:selected="${r.repuestoId == null}">Seleccione…</option>
+                  <option th:each="rp: ${repuestos}"
+                          th:value="${rp.id}"
                           th:text="${rp.nombre}"
                           th:selected="${rp.id == r.repuestoId}"></option>
                 </select>
@@ -97,7 +106,6 @@
                        th:value="${r.cantidad}" oninput="recalcularFila(this)">
               </td>
               <td>
-                <!-- editable u opcional; si va vacío, el servicio toma precio del repuesto en BD -->
                 <input class="form-control text-end" type="number" min="0" step="0.01"
                        th:name="${'repuestos[' + it.index + '].precioUnit'}"
                        th:value="${r.precioUnit}" oninput="recalcularFila(this)">
@@ -138,7 +146,7 @@
             </tr>
             </thead>
             <tbody id="tbodyServicios">
-            <!-- Filas existentes -->
+            <!-- Filas existentes (DTO.servicios) -->
             <tr th:each="s, it : *{servicios}">
               <td>
                 <input class="form-control" type="text"
@@ -182,18 +190,16 @@
     </div>
   </form>
 
-  <!-- ========= Template de opciones de repuesto para filas nuevas ========= -->
-  <template id="tpl-options-repuesto">
-    <option value="">Seleccione…</option>
+  <!-- ========= Fuente de <option> para repuestos (renderizable por Thymeleaf) ========= -->
+  <div id="optsRepuesto" style="display:none" th:remove="tag">
+    <option value="" selected>Seleccione…</option>
     <option th:each="rp: ${repuestos}" th:value="${rp.id}" th:text="${rp.nombre}"></option>
-  </template>
+  </div>
 
-  <!-- ========= Plantillas de filas (sin th:field; JS les asigna name=) ========= -->
+  <!-- ========= Plantillas de filas (JS asigna name=) ========= -->
   <template id="tplRowRepuesto">
     <tr>
-      <td>
-        <select class="form-select"></select>
-      </td>
+      <td><select class="form-select"></select></td>
       <td><input class="form-control text-end" type="number" min="0" step="0.01" oninput="recalcularFila(this)"></td>
       <td><input class="form-control text-end" type="number" min="0" step="0.01" oninput="recalcularFila(this)"></td>
       <td><input class="form-control text-end" type="number" min="0" step="0.01" readonly></td>
@@ -222,18 +228,23 @@
 </section>
 
 <!-- ================== JS ================== -->
-<script th:inline="javascript">
+<script>
   const tbodyRepuestos = document.getElementById('tbodyRepuestos');
   const tbodyServicios = document.getElementById('tbodyServicios');
-  const tplOptionsRepuesto = document.getElementById('tpl-options-repuesto');
 
   document.getElementById('btnAddRepuesto').addEventListener('click', addRepuesto);
   document.getElementById('btnAddServicio').addEventListener('click', addServicio);
 
+  function optionsHtml(idContainer){
+    const cont = document.getElementById(idContainer);
+    return Array.from(cont.querySelectorAll('option')).map(o => o.outerHTML).join('');
+  }
+  const OPTS_REP = optionsHtml('optsRepuesto');
+
   function addRepuesto() {
     const tr = document.getElementById('tplRowRepuesto').content.firstElementChild.cloneNode(true);
     const select = tr.querySelector('select');
-    select.innerHTML = tplOptionsRepuesto.innerHTML;
+    select.innerHTML = OPTS_REP;
     tbodyRepuestos.appendChild(tr);
     renumerarTabla(tbodyRepuestos, 'repuestos');
   }
@@ -256,15 +267,12 @@
     const rows = Array.from(tbody.querySelectorAll('tr'));
     rows.forEach((tr, idx) => {
       const tds = tr.querySelectorAll('td');
-
       if (tbody === tbodyRepuestos) {
-        // Orden: repuestoId (select), cantidad (input), precioUnit (input), totalLinea (input readonly)
         tds[0].querySelector('select').name = `${prefix}[${idx}].repuestoId`;
         tds[1].querySelector('input').name  = `${prefix}[${idx}].cantidad`;
         tds[2].querySelector('input').name  = `${prefix}[${idx}].precioUnit`;
         tds[3].querySelector('input').name  = `${prefix}[${idx}].totalLinea`;
       } else {
-        // Servicios: descripcion, cantidad, precioUnit, totalLinea
         tds[0].querySelector('input').name  = `${prefix}[${idx}].descripcion`;
         tds[1].querySelector('input').name  = `${prefix}[${idx}].cantidad`;
         tds[2].querySelector('input').name  = `${prefix}[${idx}].precioUnit`;
@@ -276,7 +284,6 @@
   function recalcularFila(anyInput) {
     const tr = anyInput.closest('tr');
     const nums = Array.from(tr.querySelectorAll('input[type="number"]'));
-    // Para repuestos y servicios: nums[0]=cantidad, nums[1]=precio, nums[2]=total
     if (nums.length >= 3) {
       const cantidad = parseFloat(nums[0].value || 0);
       const precio   = parseFloat(nums[1].value || 0);

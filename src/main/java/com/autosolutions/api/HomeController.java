@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -45,10 +47,10 @@ public class HomeController {
             long clientesCount = clienteRepo.count();
             long serviciosCount = servicioRepo.count();
             long vehiculosCount = vehiculoRepo.count();
-            long ordenesCount = ordenRepo.count();
-            
-            // Órdenes activas (Pendiente + En Proceso)
-            long ordenesActivas = ordenRepo.countByEstadoIdIn(java.util.List.of(1L, 2L));
+            long ordenesCount  = ordenRepo.count();
+
+            // Órdenes activas (por ejemplo: 1=ABIERTA, 2=EN_PROCESO) -> IDs Integer
+            long ordenesActivas = ordenRepo.countByEstado_IdIn(List.of(1, 2));
 
             model.addAttribute("clientesCount", clientesCount);
             model.addAttribute("serviciosCount", serviciosCount);
@@ -61,8 +63,8 @@ public class HomeController {
             model.addAttribute("dbOk", true);
             model.addAttribute("estadosCount", estadosCount);
 
-            log.info("✅ Estadísticas cargadas: {} clientes, {} servicios, {} vehículos, {} órdenes", 
-                clientesCount, serviciosCount, vehiculosCount, ordenesCount);
+            log.info("✅ Estadísticas cargadas: {} clientes, {} servicios, {} vehículos, {} órdenes",
+                    clientesCount, serviciosCount, vehiculosCount, ordenesCount);
 
         } catch (Exception e) {
             log.error("❌ Error al cargar estadísticas del dashboard", e);

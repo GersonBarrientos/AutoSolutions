@@ -1,30 +1,25 @@
 package com.autosolutions.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "ORDEN_TRABAJO", schema = "GERSON")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@SequenceGenerator(
+        name = "ORDEN_TRABAJO_SEQ_GEN",
+        sequenceName = "GERSON.ORDEN_TRABAJO_SEQ",
+        allocationSize = 1
+)
 public class OrdenTrabajo {
 
     @Id
-    // Usa IDENTITY solo si la columna ID es IDENTITY en Oracle 21c+.
-    // Si usas secuencia, cambia a @SequenceGenerator + @GeneratedValue(strategy = SEQUENCE, generator = "...")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDEN_TRABAJO_SEQ_GEN")
+    @Column(name = "ID", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -35,60 +30,147 @@ public class OrdenTrabajo {
     @JoinColumn(name = "ESTADO_ID", nullable = false)
     private EstadoOrden estado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMPLEADO_ID")
+    private Empleado empleado; // Asignado a la orden
+
     @Column(name = "FECHA_INGRESO", nullable = false)
     private LocalDateTime fechaIngreso;
 
-    // <-- clave: usar el nombre real de la columna
-    @Column(name = "FECHA_SALIDA")
+    @Column(name = "FECHA_SALIDA_ESTIMADA")
     private LocalDateTime fechaSalidaEstimada;
 
-    @Column(name = "KM_INGRESO", precision = 10)
+    @Column(name = "KM_INGRESO")
     private Long kmIngreso;
 
-    @Column(name = "DIAGNOSTICO", length = 1000)
+    @Column(name = "DIAGNOSTICO", length = 2000)
     private String diagnostico;
 
-    @Column(name = "OBSERVACIONES", length = 1000)
+    @Column(name = "OBSERVACIONES", length = 2000)
     private String observaciones;
 
-    // Si manejas empleado en tu modelo:
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EMPLEADO_ID")
-    private Empleado empleado;
-
-    @Column(name = "SUBTOTAL_MO", nullable = false, precision = 19, scale = 4)
-    @Builder.Default
+    @Column(name = "SUBTOTAL_MANO_OBRA", precision = 12, scale = 2, nullable = false)
     private BigDecimal subtotalManoObra = BigDecimal.ZERO;
 
-    @Column(name = "SUBTOTAL_REP", nullable = false, precision = 19, scale = 4)
-    @Builder.Default
+    @Column(name = "SUBTOTAL_REPUESTOS", precision = 12, scale = 2, nullable = false)
     private BigDecimal subtotalRepuestos = BigDecimal.ZERO;
 
-    @Column(name = "DESCUENTO", nullable = false, precision = 19, scale = 4)
-    @Builder.Default
+    @Column(name = "DESCUENTO", precision = 12, scale = 2, nullable = false)
     private BigDecimal descuento = BigDecimal.ZERO;
 
-    @Column(name = "IMPUESTO", nullable = false, precision = 19, scale = 4)
-    @Builder.Default
+    @Column(name = "IMPUESTO", precision = 12, scale = 2, nullable = false)
     private BigDecimal impuesto = BigDecimal.ZERO;
 
-    // En la BD es NUMBER(19,4); ajusta tu mapeo
-    @Column(name = "TOTAL", nullable = false, precision = 19, scale = 4)
-    @Builder.Default
+    @Column(name = "TOTAL", precision = 12, scale = 2, nullable = false)
     private BigDecimal total = BigDecimal.ZERO;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
+
+    @Column(name = "CREATED_AT", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
-    @Builder.Default
-    @OneToMany(
-            mappedBy = "orden",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JsonManagedReference
-    private Set<DetalleOrden> detalles = new HashSet<>();
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DetalleOrden> detalles = new LinkedHashSet<>();
+
+    /* ====== Callbacks ====== */
+    @PrePersist
+    public void prePersist() {
+        var now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+        if (this.fechaIngreso == null) this.fechaIngreso = now;
+        if (subtotalManoObra == null) subtotalManoObra = BigDecimal.ZERO;
+        if (subtotalRepuestos == null) subtotalRepuestos = BigDecimal.ZERO;
+        if (descuento == null) descuento = BigDecimal.ZERO;
+        if (impuesto == null) impuesto = BigDecimal.ZERO;
+        if (total == null) total = BigDecimal.ZERO;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /* ====== Helpers ====== */
+    public void addDetalle(DetalleOrden d) {
+        d.setOrden(this);
+        this.detalles.add(d);
+    }
+
+    public void clearDetalles() {
+        for (DetalleOrden d : this.detalles) {
+            d.setOrden(null);
+        }
+        this.detalles.clear();
+    }
+
+    /* ====== Getters/Setters ====== */
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Vehiculo getVehiculo() { return vehiculo; }
+    public void setVehiculo(Vehiculo vehiculo) { this.vehiculo = vehiculo; }
+
+    public EstadoOrden getEstado() { return estado; }
+    public void setEstado(EstadoOrden estado) { this.estado = estado; }
+
+    public Empleado getEmpleado() { return empleado; }
+    public void setEmpleado(Empleado empleado) { this.empleado = empleado; }
+
+    public LocalDateTime getFechaIngreso() { return fechaIngreso; }
+    public void setFechaIngreso(LocalDateTime fechaIngreso) { this.fechaIngreso = fechaIngreso; }
+
+    public LocalDateTime getFechaSalidaEstimada() { return fechaSalidaEstimada; }
+    public void setFechaSalidaEstimada(LocalDateTime fechaSalidaEstimada) { this.fechaSalidaEstimada = fechaSalidaEstimada; }
+
+    public Long getKmIngreso() { return kmIngreso; }
+    public void setKmIngreso(Long kmIngreso) { this.kmIngreso = kmIngreso; }
+
+    public String getDiagnostico() { return diagnostico; }
+    public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    public BigDecimal getSubtotalManoObra() { return subtotalManoObra; }
+    public void setSubtotalManoObra(BigDecimal subtotalManoObra) { this.subtotalManoObra = subtotalManoObra; }
+
+    public BigDecimal getSubtotalRepuestos() { return subtotalRepuestos; }
+    public void setSubtotalRepuestos(BigDecimal subtotalRepuestos) { this.subtotalRepuestos = subtotalRepuestos; }
+
+    public BigDecimal getDescuento() { return descuento; }
+    public void setDescuento(BigDecimal descuento) { this.descuento = descuento; }
+
+    public BigDecimal getImpuesto() { return impuesto; }
+    public void setImpuesto(BigDecimal impuesto) { this.impuesto = impuesto; }
+
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
+
+    public Long getVersion() { return version; }
+    public void setVersion(Long version) { this.version = version; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public Set<DetalleOrden> getDetalles() { return detalles; }
+    public void setDetalles(Set<DetalleOrden> detalles) { this.detalles = detalles; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrdenTrabajo that)) return false;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() { return 31; }
 }
