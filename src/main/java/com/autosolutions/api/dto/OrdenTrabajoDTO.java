@@ -1,5 +1,8 @@
 package com.autosolutions.api.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,10 +16,17 @@ public class OrdenTrabajoDTO {
 
     private Long id; // importante para modo edición en Thymeleaf
 
+    @NotNull(message = "Vehículo es requerido")
     private Long vehiculoId;
-    private Integer estadoId;
 
+    @NotNull(message = "Estado es requerido")
+    private Long estadoId; // <<-- Long (consistente con repos/entidad)
+
+    @NotNull(message = "Fecha de ingreso es requerida")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaIngreso;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaSalidaEstimada;
 
     private String diagnostico;
@@ -29,15 +39,14 @@ public class OrdenTrabajoDTO {
     private List<RepuestoLineaDTO> repuestos = new ArrayList<>();
 
     // ===== getters & setters =====
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public Long getVehiculoId() { return vehiculoId; }
     public void setVehiculoId(Long vehiculoId) { this.vehiculoId = vehiculoId; }
 
-    public Integer getEstadoId() { return estadoId; }
-    public void setEstadoId(Integer estadoId) { this.estadoId = estadoId; }
+    public Long getEstadoId() { return estadoId; }
+    public void setEstadoId(Long estadoId) { this.estadoId = estadoId; }
 
     public LocalDateTime getFechaIngreso() { return fechaIngreso; }
     public void setFechaIngreso(LocalDateTime fechaIngreso) { this.fechaIngreso = fechaIngreso; }
@@ -62,14 +71,12 @@ public class OrdenTrabajoDTO {
 
     // ================== SUB-DTOS ==================
 
-    /**
-     * Línea de tipo SERVICIO.
-     * Ej: "Cambio de aceite", cantidad 1, precio 15.00
-     */
+    /** Línea de tipo SERVICIO. */
     public static class ServicioLineaDTO {
         private String descripcion;
         private BigDecimal cantidad = BigDecimal.ONE;
         private BigDecimal precioUnit = BigDecimal.ZERO;
+        private BigDecimal totalLinea = BigDecimal.ZERO; // <<-- usado por el form/servicio
 
         public String getDescripcion() { return descripcion; }
         public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
@@ -79,17 +86,18 @@ public class OrdenTrabajoDTO {
 
         public BigDecimal getPrecioUnit() { return precioUnit; }
         public void setPrecioUnit(BigDecimal precioUnit) { this.precioUnit = precioUnit; }
+
+        public BigDecimal getTotalLinea() { return totalLinea; }
+        public void setTotalLinea(BigDecimal totalLinea) { this.totalLinea = totalLinea; }
     }
 
-    /**
-     * Línea de tipo REPUESTO.
-     * Aquí sí hay vínculo a un repuesto existente en base de datos.
-     */
+    /** Línea de tipo REPUESTO. */
     public static class RepuestoLineaDTO {
         private Long repuestoId;
-        private String descripcion; // opcional mostrar nombre comercial en el form
+        private String descripcion; // opcional
         private BigDecimal cantidad = BigDecimal.ONE;
-        private BigDecimal precioUnit = BigDecimal.ZERO;
+        private BigDecimal precioUnit = BigDecimal.ZERO; // puede venir null en la práctica
+        private BigDecimal totalLinea = BigDecimal.ZERO; // <<-- usado por el form/servicio
 
         public Long getRepuestoId() { return repuestoId; }
         public void setRepuestoId(Long repuestoId) { this.repuestoId = repuestoId; }
@@ -102,5 +110,8 @@ public class OrdenTrabajoDTO {
 
         public BigDecimal getPrecioUnit() { return precioUnit; }
         public void setPrecioUnit(BigDecimal precioUnit) { this.precioUnit = precioUnit; }
+
+        public BigDecimal getTotalLinea() { return totalLinea; }
+        public void setTotalLinea(BigDecimal totalLinea) { this.totalLinea = totalLinea; }
     }
 }

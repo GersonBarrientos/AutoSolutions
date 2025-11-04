@@ -4,6 +4,7 @@ import com.autosolutions.domain.OrdenTrabajo;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,8 +16,7 @@ public interface OrdenTrabajoRepository extends JpaRepository<OrdenTrabajo, Long
     List<OrdenTrabajo> findAllByOrderByIdDesc();
 
     /**
-     * Lista con fetch de vehiculo y estado para que no dé LazyInitialization
-     * en la vista/lista.
+     * Lista con fetch de vehiculo y estado para que no dé LazyInitialization en la vista/lista.
      */
     @Query("""
         select ot
@@ -28,20 +28,26 @@ public interface OrdenTrabajoRepository extends JpaRepository<OrdenTrabajo, Long
     List<OrdenTrabajo> findAllWithVehiculoEstadoOrderByIdDesc();
 
     /**
-     * Ejemplo de conteo de órdenes activas por estado.
-     * Sirve para un dashboard si quieres.
+     * Ejemplo de conteo de órdenes activas por estado (ids como Long).
      */
-    Long countByEstadoIdIn(List<Integer> estadoIds);
+    Long countByEstadoIdIn(List<Long> estadoIds);
 
     /**
-     * Cargar una orden con sus detalles, repuestos, etc.
-     * Esto es útil para editar/ver sin reventar Lazy.
+     * Cargar una orden con sus detalles y repuestos (evita Lazy en editar/ver).
+     * Usamos JOIN FETCH por id para asegurar un solo query completo.
      */
-    @EntityGraph(attributePaths = {
-            "vehiculo",
-            "estado",
-            "detalles",
-            "detalles.repuesto"
-    })
-    OrdenTrabajo findWithDetallesById(Long id);
+    @Query("""
+        select ot
+        from OrdenTrabajo ot
+          left join fetch ot.vehiculo v
+          left join fetch ot.estado e
+          left join fetch ot.detalles d
+          left join fetch d.repuesto r
+        where ot.id = :id
+    """)
+    OrdenTrabajo findWithDetallesById(@Param("id") Long id);
+
+    // Alternativa con EntityGraph (si prefieres):
+    // @EntityGraph(attributePaths = {"vehiculo","estado","detalles","detalles.repuesto"})
+    // Optional<OrdenTrabajo> findById(Long id);
 }

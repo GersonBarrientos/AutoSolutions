@@ -32,7 +32,11 @@ public class OrdenTrabajoPageController {
 
   @GetMapping
   public String list(Model model) {
-    model.addAttribute("ordenes", ordenRepo.findAllWithVehiculoEstadoOrderByIdDesc());
+    try {
+      model.addAttribute("ordenes", ordenRepo.findAllWithVehiculoEstadoOrderByIdDesc());
+    } catch (Exception e) {
+      model.addAttribute("ordenes", ordenRepo.findAllByOrderByIdDesc());
+    }
     return "ordenes/list";
   }
 
@@ -45,23 +49,32 @@ public class OrdenTrabajoPageController {
 
   @GetMapping("/{id}")
   public String detalle(@PathVariable Long id, Model model, RedirectAttributes ra) {
-    Optional<OrdenTrabajo> orden = ordenRepo.findById(id);
-    if (orden.isEmpty()) {
-      ra.addFlashAttribute("error", "Orden no encontrada");
-      return "redirect:/ordenes";
+    OrdenTrabajo orden = null;
+    try {
+      orden = ordenRepo.findWithDetallesById(id);
+    } catch (Exception ignored) { }
+
+    if (orden == null) {
+      Optional<OrdenTrabajo> fallback = ordenRepo.findById(id);
+      if (fallback.isEmpty()) {
+        ra.addFlashAttribute("error", "Orden no encontrada");
+        return "redirect:/ordenes";
+      }
+      orden = fallback.get();
     }
-    model.addAttribute("orden", orden.get());
+
+    model.addAttribute("orden", orden);
     return "ordenes/detalle";
   }
 
   @GetMapping("/{id}/editar")
   public String editar(@PathVariable Long id, Model model, RedirectAttributes ra) {
-    Optional<OrdenTrabajo> orden = ordenRepo.findById(id);
-    if (orden.isEmpty()) {
+    OrdenTrabajoDTO dto = service.obtenerDTO(id);
+    if (dto == null) {
       ra.addFlashAttribute("error", "Orden no encontrada");
       return "redirect:/ordenes";
     }
-    model.addAttribute("orden", orden.get());
+    model.addAttribute("orden", dto);
     cargarCatalogos(model);
     return "ordenes/form";
   }
@@ -89,6 +102,13 @@ public class OrdenTrabajoPageController {
     service.actualizarOrden(id, dto);
     ra.addFlashAttribute("success", "Orden actualizada");
     return "redirect:/ordenes/" + id;
+  }
+
+  @PostMapping("/{id}/eliminar")
+  public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
+    service.eliminarOrden(id);
+    ra.addFlashAttribute("success", "Orden eliminada");
+    return "redirect:/ordenes";
   }
 
   private void cargarCatalogos(Model model) {

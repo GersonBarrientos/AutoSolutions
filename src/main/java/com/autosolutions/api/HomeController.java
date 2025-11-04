@@ -48,7 +48,7 @@ public class HomeController {
             long ordenesCount = ordenRepo.count();
             
             // Órdenes activas (Pendiente + En Proceso)
-            long ordenesActivas = ordenRepo.countByEstadoIdIn(java.util.List.of(1, 2));
+            long ordenesActivas = ordenRepo.countByEstadoIdIn(java.util.List.of(1L, 2L));
 
             model.addAttribute("clientesCount", clientesCount);
             model.addAttribute("serviciosCount", serviciosCount);

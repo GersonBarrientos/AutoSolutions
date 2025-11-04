@@ -79,7 +79,7 @@
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="bi bi-list-check me-2"></i> Listado de Órdenes</h5>
-        <span class="badge badge-primary" th:if="${ordenes != null}">
+        <span class="badge bg-primary" th:if="${ordenes != null}">
           <span th:text="${#lists.size(ordenes)}">0</span> órdenes
         </span>
       </div>
@@ -106,8 +106,9 @@
             <td>
               <div th:if="${o.vehiculo != null}">
                 <div class="fw-semibold">
-                  <span th:text="${o.vehiculo.marca}">Toyota</span>
-                  <span th:text="${o.vehiculo.modelo}">Corolla</span>
+                  <!-- Si Marca/Modelo son entidades, usa .nombre -->
+                  <span th:text="${o.vehiculo.marca != null ? o.vehiculo.marca.nombre : ''}">Marca</span>
+                  <span th:text="${o.vehiculo.modelo != null ? o.vehiculo.modelo.nombre : ''}">Modelo</span>
                 </div>
                 <small class="text-muted" th:if="${o.vehiculo.cliente != null}">
                   <i class="bi bi-person me-1"></i>
@@ -117,20 +118,20 @@
               <span th:unless="${o.vehiculo != null}" class="text-muted">—</span>
             </td>
             <td>
-              <span class="badge badge-primary fw-bold" th:if="${o.vehiculo != null}" th:text="${o.vehiculo.placa}">P123-456</span>
+              <span class="badge bg-primary fw-bold" th:if="${o.vehiculo != null}" th:text="${o.vehiculo.placa}">P123-456</span>
               <span th:unless="${o.vehiculo != null}" class="text-muted">—</span>
             </td>
             <td class="text-center">
-              <span th:if="${o.estado != null and o.estado.nombre == 'Pendiente'}"  class="badge badge-warning">
+              <span th:if="${o.estado != null and o.estado.nombre == 'Pendiente'}"  class="badge bg-warning text-dark">
                 <i class="bi bi-hourglass-split me-1"></i> <span th:text="${o.estado.nombre}">Pendiente</span>
               </span>
-              <span th:if="${o.estado != null and o.estado.nombre == 'En Proceso'}" class="badge badge-info">
+              <span th:if="${o.estado != null and o.estado.nombre == 'En Proceso'}" class="badge bg-info text-dark">
                 <i class="bi bi-gear me-1"></i> <span th:text="${o.estado.nombre}">En Proceso</span>
               </span>
-              <span th:if="${o.estado != null and o.estado.nombre == 'Completada'}" class="badge badge-success">
+              <span th:if="${o.estado != null and o.estado.nombre == 'Completada'}" class="badge bg-success">
                 <i class="bi bi-check-circle me-1"></i> <span th:text="${o.estado.nombre}">Completada</span>
               </span>
-              <span th:if="${o.estado != null and o.estado.nombre == 'Cancelada'}" class="badge badge-danger">
+              <span th:if="${o.estado != null and o.estado.nombre == 'Cancelada'}" class="badge bg-danger">
                 <i class="bi bi-x-circle me-1"></i> <span th:text="${o.estado.nombre}">Cancelada</span>
               </span>
               <span th:if="${o.estado == null}" class="badge bg-secondary">Sin estado</span>

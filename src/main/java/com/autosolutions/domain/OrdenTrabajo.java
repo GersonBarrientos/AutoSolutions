@@ -15,12 +15,14 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "ORDEN_TRABAJO")
+@Table(name = "ORDEN_TRABAJO", schema = "GERSON")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrdenTrabajo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ajusta a tu secuencia si usas secuencia en Oracle
+    // Usa IDENTITY solo si la columna ID es IDENTITY en Oracle 21c+.
+    // Si usas secuencia, cambia a @SequenceGenerator + @GeneratedValue(strategy = SEQUENCE, generator = "...")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @EqualsAndHashCode.Include
     private Long id;
@@ -36,9 +38,12 @@ public class OrdenTrabajo {
     @Column(name = "FECHA_INGRESO", nullable = false)
     private LocalDateTime fechaIngreso;
 
-    // ⬇⬇⬇ AQUÍ EL CAMBIO IMPORTANTE
-    @Column(name = "FECHA_SALIDA_ESTIMADA") // <- antes estaba FECHA_SALIDA_EST
+    // <-- clave: usar el nombre real de la columna
+    @Column(name = "FECHA_SALIDA")
     private LocalDateTime fechaSalidaEstimada;
+
+    @Column(name = "KM_INGRESO", precision = 10)
+    private Long kmIngreso;
 
     @Column(name = "DIAGNOSTICO", length = 1000)
     private String diagnostico;
@@ -46,9 +51,37 @@ public class OrdenTrabajo {
     @Column(name = "OBSERVACIONES", length = 1000)
     private String observaciones;
 
+    // Si manejas empleado en tu modelo:
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMPLEADO_ID")
+    private Empleado empleado;
+
+    @Column(name = "SUBTOTAL_MO", nullable = false, precision = 19, scale = 4)
     @Builder.Default
-    @Column(name = "TOTAL", nullable = false, precision = 14, scale = 2)
+    private BigDecimal subtotalManoObra = BigDecimal.ZERO;
+
+    @Column(name = "SUBTOTAL_REP", nullable = false, precision = 19, scale = 4)
+    @Builder.Default
+    private BigDecimal subtotalRepuestos = BigDecimal.ZERO;
+
+    @Column(name = "DESCUENTO", nullable = false, precision = 19, scale = 4)
+    @Builder.Default
+    private BigDecimal descuento = BigDecimal.ZERO;
+
+    @Column(name = "IMPUESTO", nullable = false, precision = 19, scale = 4)
+    @Builder.Default
+    private BigDecimal impuesto = BigDecimal.ZERO;
+
+    // En la BD es NUMBER(19,4); ajusta tu mapeo
+    @Column(name = "TOTAL", nullable = false, precision = 19, scale = 4)
+    @Builder.Default
     private BigDecimal total = BigDecimal.ZERO;
+
+    @Column(name = "CREATED_AT", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 
     @Builder.Default
     @OneToMany(
